@@ -1,0 +1,64 @@
+import re
+import tkinter as tk
+from tkinter import messagebox
+
+def validar_cadena(cadena):
+    return bool(re.match("^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s]+$", cadena))
+
+def formato_nombre_propio(cadena):
+    return " ".join(palabra.capitalize() for palabra in cadena.split())
+
+class Aplicacion(tk.Tk):
+    def __init__(self):
+        super().__init__()
+
+        self.title("Ingreso de datos")
+        self.geometry("550x250")
+
+        self.nombre_label = tk.Label(self, text="Nombre:")
+        self.nombre_label.pack(pady=(20, 0))
+        self.nombre_var = tk.StringVar()
+        self.nombre_var.trace("w", self.actualizar_nombre)
+        self.nombre_entry = tk.Entry(self, textvariable=self.nombre_var)
+        self.nombre_entry.pack()
+
+        self.apellido_label = tk.Label(self, text="Apellido:")
+        self.apellido_label.pack(pady=(20, 30))
+        self.apellido_var = tk.StringVar()
+        self.apellido_var.trace("w", self.actualizar_apellido)
+        self.apellido_entry = tk.Entry(self, textvariable=self.apellido_var)
+        self.apellido_entry.pack()
+
+        self.resultado_label = tk.Label(self, text="")
+        self.resultado_label.pack(pady=(20, 0))
+
+        self.boton_validar = tk.Button(self, text="Validar", command=self.validar_datos)
+        self.boton_validar.pack(pady=(20, 0))
+
+    def actualizar_nombre(self, *args):
+        current_text = self.nombre_var.get()
+        formatted_text = formato_nombre_propio(current_text)
+        if current_text.endswith(" "):
+            formatted_text += " "
+        self.nombre_var.set(formatted_text)
+
+    def actualizar_apellido(self, *args):
+        current_text = self.apellido_var.get()
+        formatted_text = formato_nombre_propio(current_text)
+        if current_text.endswith(" "):
+            formatted_text += " "
+        self.apellido_var.set(formatted_text)
+
+    def validar_datos(self):
+        nombre = self.nombre_var.get()
+        apellido = self.apellido_var.get()
+
+        if validar_cadena(nombre) and validar_cadena(apellido):
+            self.resultado_label.config(text=f"Nombre: {nombre}, Apellido: {apellido}")
+            messagebox.showinfo("Éxito", "Datos validados correctamente")
+        else:
+            messagebox.showerror("Error", "Por favor, ingresa un nombre y apellido válidos (solo letras y espacios)")
+
+if __name__ == "__main__":
+    app = Aplicacion()
+    app.mainloop()
