@@ -1,0 +1,126 @@
+<h1>Calculadora de Riesgo de Diabetes</h1>
+
+<form>
+	<p>1. ¿Cuál es el género del paciente?</p>
+	<input type="radio" name="gender" value="female" required> Femenino
+	<input type="radio" name="gender" value="male" required> Masculino
+
+	<p>2. ¿Cuál es el peso del paciente en kilogramos?</p>
+	<input type="number" name="weight" min="1" max="500" required>
+
+	<p>3. ¿Cuál es la altura del paciente en centímetros?</p>
+	<input type="number" name="height" min="1" max="300" required>
+
+	<p>4. ¿Cuántos años tiene el paciente?</p>
+	<input type="number" name="age" min="1" max="120" required>
+
+	<p>5. ¿Cuál es la circunferencia de la cintura del paciente en centímetros?</p>
+	<input type="number" name="waist" min="1" max="300" required>
+
+	<p>6. ¿El paciente realiza actividad física por más de 30 minutos todos los días?</p>
+	<input type="radio" name="activity" value="yes" required> Sí
+	<input type="radio" name="activity" value="no" required> No
+
+	<p>7. ¿Con qué frecuencia consume el paciente verduras y frutas?</p>
+	<input type="radio" name="diet" value="rarely" required> Raramente
+	<input type="radio" name="diet" value="sometimes" required> A veces
+	<input type="radio" name="diet" value="often" required> A menudo
+
+	<p>8. ¿El paciente ha tomado medicamentos para la presión arterial alta de manera regular?</p>
+	<input type="radio" name="blood-pressure" value="yes" required> Sí
+	<input type="radio" name="blood-pressure" value="no" required> No
+
+	<p>9. ¿Alguna vez se ha encontrado que el paciente tiene niveles elevados de glucosa en sangre?</p>
+	<input type="radio" name="glucose" value="yes" required> Sí
+	<input type="radio" name="glucose" value="no" required> No
+
+	<p>10. ¿Alguno de los abuelos, tíos, primos o hermanos del paciente ha sido diagnosticado con diabetes (tipo 1 o tipo 2)?</p>
+	<input type="radio" name="family-history" value="yes" required> Sí
+	<input type="radio" name="family-history" value="no" required> No
+
+	<p>11. ¿Los padres, hermanos, hijos o el propio paciente ha sido diagnosticado con diabetes (tipo 1 o tipo 2)?</p>
+	<input type="radio" name="family-history2" value="yes" required> Sí
+	<input type="radio" name="family-history2" value="no" required> No
+
+	<br>
+	<input type="submit" value="Calcular Riesgo">
+</form>
+
+<br>
+
+<p id="result"></p
+<script>
+	document.querySelector('form').addEventListener('submit', function(event) {
+		event.preventDefault();
+
+		var gender = document.querySelector('input[name="gender"]:checked').value;
+		var weight = document.querySelector('input[name="weight"]').value;
+		var height = document.querySelector('input[name="height"]').value;
+		var age = document.querySelector('input[name="age"]').value;
+		var waist = document.querySelector('input[name="waist"]').value;
+		var activity = document.querySelector('input[name="activity"]:checked').value;
+		var diet = document.querySelector('input[name="diet"]:checked').value;
+		var bloodPressure = document.querySelector('input[name="blood-pressure"]:checked').value;
+		var glucose = document.querySelector('input[name="glucose"]:checked').value;
+		var familyHistory = document.querySelector('input[name="family-history"]:checked').value;
+		var familyHistory2 = document.querySelector('input[name="family-history2"]:checked').value;
+
+		var score = 0;
+
+		if (gender === 'female') {
+			score += 1;
+		}
+
+		if (age >= 45 && age <= 54) {
+			score += 2;
+		} else if (age >= 55 && age <= 64) {
+			score += 3;
+		} else if (age >= 65) {
+			score += 4;
+		}
+
+		if (waist >= 80 && waist < 88) {
+			score += 1;
+		} else if (waist >= 88 && waist < 102) {
+			score += 2;
+		} else if (waist >= 102) {
+			score += 3;
+		}
+
+		if (activity === 'yes') {
+			score -= 2;
+		}
+
+		if (diet === 'often') {
+			score -= 1;
+		}
+
+		if (bloodPressure === 'yes') {
+			score += 2;
+		}
+
+		if (glucose === 'yes') {
+			score += 2;
+		}
+
+		if (familyHistory === 'yes') {
+			score += 2;
+		}
+
+		if (familyHistory2 === 'yes') {
+			score += 2;
+		}
+
+		if (score < 9) {
+			document.querySelector('#result').innerHTML = 'El riesgo de desarrollar diabetes es bajo a moderado (1-17% de probabilidad en 10 años)';
+		} else if (score >= 9 && score <= 14) {
+			document.querySelector('#result').innerHTML = 'El riesgo de desarrollar diabetes es alto (33% de probabilidad en 10 años)';
+		} else if (score > 14) {
+			document.querySelector('#result').innerHTML = 'El riesgo de desarrollar diabetes es muy alto (50% de probabilidad en 10 años)';
+		}
+
+		document.querySelector('form').reset();
+	});
+</script>
+</body>
+</html>
